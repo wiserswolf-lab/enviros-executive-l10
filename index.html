@@ -814,6 +814,11 @@
             document.getElementById('syncStatus').textContent = text;
         }
 
+        function cleanBadChars(str) {
+            if (typeof str !== 'string') return str;
+            return str.replace(/â€"/g, '-').replace(/↳/g, '>').replace(/—/g, '-').replace(/–/g, '-');
+        }
+
         function loadData() {
             const saved = localStorage.getItem(STORAGE_KEY);
             if (saved) try {
@@ -833,6 +838,17 @@
                                row.am === 'TOTAL' ? '66.7%' : row.notFC || row.unsched,
                         critical: row.critical,
                         isTotal: row.isTotal
+                    }));
+                }
+                // Clean bad Unicode characters from scorecard
+                if (parsed.scorecard) {
+                    parsed.scorecard = parsed.scorecard.map(row => ({
+                        ...row,
+                        metric: cleanBadChars(row.metric),
+                        target: cleanBadChars(row.target),
+                        current: cleanBadChars(row.current),
+                        gap: cleanBadChars(row.gap),
+                        pct: cleanBadChars(row.pct)
                     }));
                 }
                 data = { ...data, ...parsed };
