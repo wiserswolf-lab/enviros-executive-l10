@@ -295,9 +295,8 @@
                                 <tr>
                                     <th>AM</th>
                                     <th>Awarded</th>
-                                    <th>Billed+FC</th>
-                                    <th>Scheduled</th>
-                                    <th>% Unsched</th>
+                                    <th>Forecast</th>
+                                    <th>% Not FC</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -601,13 +600,13 @@
                 { metric: '↳ Sales from Outside', target: '$2M', current: '$0', gap: '$2M', pct: '0%' }
             ],
             ross: [
-                { am: 'Syed, Fareed', awarded: '$522,187', billed: '$217,597', scheduled: '$40,658', unsched: '92.2%' },
-                { am: 'Hancock, Adelle', awarded: '$380,790', billed: '$77,888', scheduled: '$1,903', unsched: '99.5%', critical: true },
-                { am: 'Skow, Allen', awarded: '$77,929', billed: '$43,213', scheduled: '$18,134', unsched: '76.7%' },
-                { am: 'Woods, Kevin', awarded: '$64,146', billed: '$4,778', scheduled: '$8,172', unsched: '87.3%' },
-                { am: 'Vick, Timothy', awarded: '$58,294', billed: '$29,147', scheduled: '$0', unsched: '100%', critical: true },
-                { am: 'Hanneman, Bryan', awarded: '$16,326', billed: '$0', scheduled: '$0', unsched: '100%', critical: true },
-                { am: 'TOTAL', awarded: '$1,119,672', billed: '$372,623', scheduled: '$68,866', unsched: '93.8%', isTotal: true }
+                { am: 'Syed, Fareed', awarded: '$522,187', forecast: '$217,597', notFC: '58.3%' },
+                { am: 'Hancock, Adelle', awarded: '$380,790', forecast: '$77,888', notFC: '79.5%', critical: true },
+                { am: 'Skow, Allen', awarded: '$77,929', forecast: '$43,213', notFC: '44.5%' },
+                { am: 'Woods, Kevin', awarded: '$64,146', forecast: '$4,778', notFC: '92.6%', critical: true },
+                { am: 'Vick, Timothy', awarded: '$58,294', forecast: '$29,147', notFC: '50.0%' },
+                { am: 'Hanneman, Bryan', awarded: '$16,326', forecast: '$0', notFC: '100%', critical: true },
+                { am: 'TOTAL', awarded: '$1,119,672', forecast: '$372,623', notFC: '66.7%', isTotal: true }
             ],
             opsMetrics: [
                 { metric: 'Headcount', target: '36', actual: '34', status: 'warning' },
@@ -633,7 +632,7 @@
             ],
             todos: [
                 { id: 1, text: 'Reconcile utilization numbers', owner: 'Bryan', due: 'This Week', status: 'From Glenn', completed: false, comments: [] },
-                { id: 2, text: 'Change metric: % Unscheduled to % Not Forecasted', owner: 'Scott', due: 'This Week', status: 'NEW', completed: false, comments: [] },
+                { id: 2, text: 'Change metric: % Unscheduled to % Not Forecasted', owner: 'Scott', due: 'This Week', status: 'DONE', completed: true, comments: [] },
                 { id: 3, text: 'Send condensed Ops Scorecard (top 10 metrics)', owner: 'Bryan', due: 'Friday', status: 'In Progress', completed: false, comments: [] },
                 { id: 4, text: 'Budget meeting', owner: 'Scott/Scotty/Glenn', due: 'Tomorrow', status: 'Scheduled', completed: false, comments: [] },
                 { id: 5, text: 'Time card accuracy messaging', owner: 'Bryan', due: 'Ongoing', status: 'Ongoing', completed: false, comments: [] },
@@ -647,7 +646,7 @@
             ],
             issues: [
                 { id: 1, text: 'AI tools must be in production by April (now targeting June)', owner: 'Bryan', priority: 'Critical', status: 'In Progress', completed: false, comments: [] },
-                { id: 2, text: 'AM work not forecasted - changing metric from Scheduled to Forecasted', owner: 'Bryan', priority: 'Critical', status: 'Strategy mtg needed', completed: false, comments: [] },
+                { id: 2, text: 'AM work not forecasted - metric changed to % Not Forecasted', owner: 'Bryan', priority: 'Critical', status: 'Metric Updated - Strategy mtg still needed', completed: false, comments: [] },
                 { id: 3, text: 'Booz Asset Tagging work at risk', owner: 'Fareed/Bryan', priority: 'High', status: 'Monitoring', completed: false, comments: [] },
                 { id: 4, text: 'Time cards — 40 hours accuracy (audit risk)', owner: 'Bryan', priority: 'High', status: 'Ongoing message', completed: false, comments: [] },
                 { id: 5, text: 'Projects entering Unanet but not in sales detail', owner: 'Glenn + Jane', priority: 'High', status: 'RESOLVED', completed: true, completedBy: 'Glenn', completedAt: '2026-02-23T21:30:00Z', comments: [] },
@@ -865,7 +864,7 @@
         function updateScorecard(i, field, value) { if (data.scorecard[i][field] !== value) { data.scorecard[i][field] = value; logChange('Updated Scorecard', `${data.scorecard[i].metric} ${field}: "${value}"`); } }
 
         function renderRoss() {
-            document.querySelector('#rossTable tbody').innerHTML = data.ross.map(row => `<tr class="${row.critical ? 'row-critical' : ''}" style="${row.isTotal ? 'background: #e8f5e9; font-weight: 600;' : ''}"><td>${row.am}</td><td>${row.awarded}</td><td>${row.billed}</td><td>${row.scheduled}</td><td class="${parseFloat(row.unsched) > 90 ? 'status-bad' : parseFloat(row.unsched) > 75 ? 'status-warning' : ''}">${row.unsched}</td></tr>`).join('');
+            document.querySelector('#rossTable tbody').innerHTML = data.ross.map(row => `<tr class="${row.critical ? 'row-critical' : ''}" style="${row.isTotal ? 'background: #e8f5e9; font-weight: 600;' : ''}"><td>${row.am}</td><td>${row.awarded}</td><td>${row.forecast}</td><td class="${parseFloat(row.notFC) > 90 ? 'status-bad' : parseFloat(row.notFC) > 75 ? 'status-warning' : ''}">${row.notFC}</td></tr>`).join('');
         }
 
         function renderOpsMetrics() {
