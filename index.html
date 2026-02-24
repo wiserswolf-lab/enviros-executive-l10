@@ -210,7 +210,7 @@
                 <div class="logo">ENVIROS<span>.</span></div>
                 <div class="meeting-info">
                     <div class="meeting-title">Executive L-10</div>
-                    <div class="meeting-meta">Mon Check-In + Fri Check-Out | Scott Wolf, Bryan Hanneman, Glenn Gray</div>
+                    <div class="meeting-meta">Mon Check-In + Fri Check-Out | Scott Wolf, Bryan Hanneman, Glenn Gray, Scott Sinclair</div>
                 </div>
             </div>
             <div class="header-right">
@@ -353,6 +353,14 @@
                     </div>
                     <div class="card-body">
                         <div id="glennRocksList"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Q1 2026 Rocks — Scott</div>
+                    </div>
+                    <div class="card-body">
+                        <div id="scottRocksList"></div>
                     </div>
                 </div>
             </div>
@@ -919,8 +927,10 @@
         function renderRocks() {
             const bryanRocks = data.rocks.filter(r => r.owner === 'Bryan');
             const glennRocks = data.rocks.filter(r => r.owner === 'Glenn');
+            const scottRocks = data.rocks.filter(r => r.owner === 'Scott');
             document.getElementById('bryanRocksList').innerHTML = bryanRocks.length ? bryanRocks.map(r => renderRockItem(r)).join('') : '<p style="color: var(--dark-gray);">No rocks.</p>';
             document.getElementById('glennRocksList').innerHTML = glennRocks.length ? glennRocks.map(r => renderRockItem(r)).join('') : '<p style="color: var(--dark-gray);">No rocks.</p>';
+            document.getElementById('scottRocksList').innerHTML = scottRocks.length ? scottRocks.map(r => renderRockItem(r)).join('') : '<p style="color: var(--dark-gray);">No rocks.</p>';
         }
 
         function renderRockItem(rock) {
