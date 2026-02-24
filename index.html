@@ -830,6 +830,12 @@
 
         function loadData() {
             const saved = localStorage.getItem(STORAGE_KEY);
+            // One-time fix: Clear corrupted localStorage data (Feb 23, 2026)
+            if (saved && saved.includes('â€"')) {
+                localStorage.removeItem(STORAGE_KEY);
+                console.log('Cleared corrupted localStorage data');
+                return;
+            }
             if (saved) try {
                 const parsed = JSON.parse(saved);
                 // Migrate old ross data format to new format (Feb 23, 2026)
