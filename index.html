@@ -357,10 +357,18 @@
                 </div>
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">Q1 2026 Rocks — Scott</div>
+                        <div class="card-title">Q1 2026 Rocks — Scott Wolf</div>
                     </div>
                     <div class="card-body">
                         <div id="scottRocksList"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Q1 2026 Rocks — Scotty (Sinclair)</div>
+                    </div>
+                    <div class="card-body">
+                        <div id="scottyRocksList"></div>
                     </div>
                 </div>
             </div>
@@ -376,6 +384,7 @@
                             <option value="Bryan">Bryan</option>
                             <option value="Glenn">Glenn</option>
                             <option value="Scott">Scott</option>
+                            <option value="Scotty">Scotty</option>
                         </select>
                         <select class="add-item-select" id="newRockStatus">
                             <option value="Not Started">Not Started</option>
@@ -412,6 +421,7 @@
                                 <option value="Bryan">Bryan</option>
                                 <option value="Glenn">Glenn</option>
                                 <option value="Scott">Scott</option>
+                                <option value="Scotty">Scotty</option>
                                 <option value="Jane">Jane</option>
                                 <option value="Bryan + Glenn">Bryan + Glenn</option>
                             </select>
@@ -441,6 +451,7 @@
                                 <option value="Bryan">Bryan</option>
                                 <option value="Glenn">Glenn</option>
                                 <option value="Scott">Scott</option>
+                                <option value="Scotty">Scotty</option>
                             </select>
                             <select class="add-item-select" id="newIssuePriority">
                                 <option value="Medium">Medium</option>
@@ -831,7 +842,8 @@
         function loadData() {
             const saved = localStorage.getItem(STORAGE_KEY);
             // One-time fix: Clear corrupted localStorage data (Feb 23, 2026)
-            if (saved && saved.includes('â€"')) {
+            // Detect bad UTF-8 encoding (â€" is \xe2\x80\x94 misinterpreted)
+            if (saved && (saved.includes('â€"') || saved.includes('\u00e2\u0080\u0094') || saved.match(/â€/))) {
                 localStorage.removeItem(STORAGE_KEY);
                 console.log('Cleared corrupted localStorage data');
                 return;
@@ -934,9 +946,11 @@
             const bryanRocks = data.rocks.filter(r => r.owner === 'Bryan');
             const glennRocks = data.rocks.filter(r => r.owner === 'Glenn');
             const scottRocks = data.rocks.filter(r => r.owner === 'Scott');
+            const scottyRocks = data.rocks.filter(r => r.owner === 'Scotty');
             document.getElementById('bryanRocksList').innerHTML = bryanRocks.length ? bryanRocks.map(r => renderRockItem(r)).join('') : '<p style="color: var(--dark-gray);">No rocks.</p>';
             document.getElementById('glennRocksList').innerHTML = glennRocks.length ? glennRocks.map(r => renderRockItem(r)).join('') : '<p style="color: var(--dark-gray);">No rocks.</p>';
             document.getElementById('scottRocksList').innerHTML = scottRocks.length ? scottRocks.map(r => renderRockItem(r)).join('') : '<p style="color: var(--dark-gray);">No rocks.</p>';
+            document.getElementById('scottyRocksList').innerHTML = scottyRocks.length ? scottyRocks.map(r => renderRockItem(r)).join('') : '<p style="color: var(--dark-gray);">No rocks.</p>';
         }
 
         function renderRockItem(rock) {
