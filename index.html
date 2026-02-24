@@ -816,7 +816,27 @@
 
         function loadData() {
             const saved = localStorage.getItem(STORAGE_KEY);
-            if (saved) try { data = { ...data, ...JSON.parse(saved) }; } catch (e) {}
+            if (saved) try {
+                const parsed = JSON.parse(saved);
+                // Migrate old ross data format to new format (Feb 23, 2026)
+                if (parsed.ross && parsed.ross.length > 0 && parsed.ross[0].billed !== undefined) {
+                    parsed.ross = parsed.ross.map(row => ({
+                        am: row.am,
+                        awarded: row.awarded,
+                        forecast: row.billed || row.forecast,
+                        notFC: row.am === 'Syed, Fareed' ? '58.3%' :
+                               row.am === 'Hancock, Adelle' ? '79.5%' :
+                               row.am === 'Skow, Allen' ? '44.5%' :
+                               row.am === 'Woods, Kevin' ? '92.6%' :
+                               row.am === 'Vick, Timothy' ? '50.0%' :
+                               row.am === 'Hanneman, Bryan' ? '100%' :
+                               row.am === 'TOTAL' ? '66.7%' : row.notFC || row.unsched,
+                        critical: row.critical,
+                        isTotal: row.isTotal
+                    }));
+                }
+                data = { ...data, ...parsed };
+            } catch (e) {}
         }
 
         function saveDataLocal() {
